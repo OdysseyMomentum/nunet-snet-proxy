@@ -1,0 +1,5 @@
+{"time_interval":300,
+    "rfakenews-service":"195.201.197.25:7003",
+    "uclnlp-service":"195.201.197.25:",
+    "daemon_endpoint":"195.201.197.25:7000"
+}

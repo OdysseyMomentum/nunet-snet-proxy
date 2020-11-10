@@ -1,12 +1,59 @@
 # Dockerfile - to build the snet-proxy api
 
-FROM python:3.7
+FROM ubuntu:18.04
+
+RUN apt-get update && \
+    apt-get install -y \
+        apt-utils \
+        curl \
+        wget \
+        vim \
+        git \
+        zip \
+        libudev-dev \
+        libusb-1.0.0-dev \
+        libxml2-dev \
+        libxslt-dev \
+        libjpeg-dev \
+        zlib1g-dev \
+        libpng-dev \
+        python3.7 \
+        python3-pip
+
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 1
+RUN apt-get install python3.7-dev -y 
+RUN pip3 install snet.sdk
+
+RUN apt-get update
+RUN wget https://github.com/fullstorydev/grpcurl/releases/download/v1.1.0/grpcurl_1.1.0_linux_x86_64.tar.gz
+RUN tar -xvzf grpcurl_1.1.0_linux_x86_64.tar.gz
+RUN chmod +x grpcurl
+RUN mv grpcurl /usr/local/bin/grpcurl
+RUN pip3 install snet-cli #( Install snet-cli)
+RUN mkdir -p /var/log/supervisor
+COPY supervisord-inside.conf /etc/supervisor/conf.d/supervisord.conf
+ARG INFURA
+RUN mkdir p /root/.snet && echo  \
+"[network.ropsten] \n\
+default_eth_rpc_endpoint = ${INFURA} \n\
+default_gas_price = medium \n\
+\n\
+[ipfs]\n\
+default_ipfs_endpoint = http://ipfs.singularitynet.io:80 \n\
+\n\
+[session]\n\
+network = ropsten" > /root/.snet/config
 
 COPY . /SNET-PROXY 
 WORKDIR /SNET-PROXY
 
+RUN snet identity create snet key --private-key 0x347e5d047b26371486f619c85378cec98027ece00fa01a0e63af71069eb50729
+RUN snet sdk generate-client-library  python odyssey rfakenews-sevice
+RUN mv ./client_libraries/odyssey/rfakenews-service/python/* /SNET-PROXY
+
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y locales
 RUN pip3 install -r requirements.txt
 
-EXPOSE 7000
+EXPOSE 7005
 
-CMD ["python3", "app.py"]
+CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf", "-n"]

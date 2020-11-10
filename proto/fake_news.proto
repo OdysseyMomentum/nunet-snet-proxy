@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package fake_news;
+
+message Input {
+    string url = 1;
+}
+
+message Response {
+    string stance = 1;
+}
+
+service FakeNews {
+    rpc get_score(Input) returns (Response) {}
+}

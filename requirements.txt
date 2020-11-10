@@ -1,4 +1,6 @@
 flask
 flask_cors
-numpy
-numpyencoder
+flask_restful
+requests_cache
+gunicorn
+supervisor
