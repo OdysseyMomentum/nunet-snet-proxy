@@ -6,8 +6,8 @@ BASE_DIR=$(readlink -f $(dirname ${BASH_SOURCE[0]}))
 
 C_NAME=''
 
-I_NAME_PROXY="snet_proxy:api"
-C_NAME_PROXY="snet_proxy_api"
+I_NAME_PROXY="snet_proxy"
+C_NAME_PROXY="snet_proxy"
 
 INFURA="https://ropsten.infura.io/v3/1e7ce8503f6c42bba499fde740512644"
 
@@ -17,7 +17,7 @@ build_proxy() {
 }
 
 run_proxy() {
-    docker run -i --name $C_NAME_PROXY --network host -p 7005:7005 -v /home/$USER/snet-cache:/snet-cache $I_NAME_PROXY
+    docker run -i --name $C_NAME_PROXY -p 7005:7005 -v /home/$USER/snet-proxy:/snet-proxy $I_NAME_PROXY
     C_NAME=$C_NAME_PROXY
 }
 

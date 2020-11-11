@@ -3,6 +3,6 @@ services:
   api:
     build: .
     ports: 
-      - "7000:7000"
+      - "7005:7005"
     volumes:
       - .:/snet-proxy

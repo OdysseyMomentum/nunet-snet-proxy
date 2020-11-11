@@ -7,6 +7,9 @@ ARG_5=$5
 IDENTITY_NAME=$ARG_2
 EMAIL_PK=$ARG_3
 
+deposit() {
+    snet account deposit 0.001 -y
+}
 
 getScore(){
     CHANNEL_ID=$ARG_2
@@ -20,5 +23,7 @@ getScore(){
 
 case $FUNC_TYPE in
     get_score) getScore ;;
+
+    deposit) deposit ;;
     
 esac

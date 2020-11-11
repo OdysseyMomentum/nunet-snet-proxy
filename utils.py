@@ -2,8 +2,8 @@ import subprocess
 import json
 import time
 
-import fake_news_pb2_grpc
-import fake_news_pb2
+import rfakenews_service_pb2_grpc as pb2_grpc
+import rfakenews_service_pb2 as pb2
 
 from snet import sdk
 from datetime import datetime
@@ -30,7 +30,7 @@ class utils():
         service_client = self.snet_sdk.create_service_client(
                                     self.org_id,
                                     self.service_id,
-                                    fake_news_pb2.FakeNewsStub,
+                                    pb2_grpc.FNScoreStub,
                                     group_name=self.group_name,
                                     concurrent_calls=10
                         )
