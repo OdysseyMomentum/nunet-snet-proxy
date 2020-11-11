@@ -48,12 +48,14 @@ COPY . /SNET-PROXY
 WORKDIR /SNET-PROXY
 
 RUN snet identity create snet key --private-key 0x347e5d047b26371486f619c85378cec98027ece00fa01a0e63af71069eb50729
-RUN snet sdk generate-client-library  python odyssey rfakenews-sevice
-RUN mv ./client_libraries/odyssey/rfakenews-service/python/* /SNET-PROXY
+
+RUN snet sdk generate-client-library  python odyssey-org uclnlp-service
+RUN mv ./client_libraries/odyssey-org/uclnlp-service/python/* /SNET-PROXY
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y locales
 RUN pip3 install -r requirements.txt
 
 EXPOSE 7005
 
-CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf", "-n"]
+CMD["gunicorn","test_sdk_uclnlp:app", "--config" "./gunicorn.conf.py"]
+#CMD["gunicorn","app:app", "--config" "./gunicorn.conf.py"]

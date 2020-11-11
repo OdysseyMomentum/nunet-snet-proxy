@@ -3,4 +3,3 @@ flask_cors
 flask_restful
 requests_cache
 gunicorn
-supervisor
