@@ -56,4 +56,5 @@ RUN pip3 install -r requirements.txt
 EXPOSE 7005
 
 CMD ["gunicorn", "test_sdk_uclnlp:app", "--config", "./gunicorn.conf.py"]
+#CMD ["gunicorn", "grpc_uclnlp:app", "--config", "./gunicorn.conf.py"]
 #CMD ["gunicorn", "app:app", "--config", "./gunicorn.conf.py"]
