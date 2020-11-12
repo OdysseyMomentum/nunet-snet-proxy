@@ -48,7 +48,12 @@ RUN snet identity create snet key --private-key 0x347e5d047b26371486f619c85378ce
 RUN snet network ropsten
 RUN snet identity snet
 RUN snet sdk generate-client-library python odyssey-org uclnlp-service
+RUN snet sdk generate-client-library python odyssey-org athene-service
+RUN snet sdk generate-client-library python odyssey-org fakenews-service
+
 RUN mv ./client_libraries/odyssey-org/uclnlp-service/python/* /SNET-PROXY
+RUN mv ./client_libraries/odyssey-org/athene-service/python/* /SNET-PROXY
+RUN mv ./client_libraries/odyssey-org/fakenews-service/python/* /SNET-PROXY
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y locales
 RUN pip3 install -r requirements.txt

@@ -104,5 +104,5 @@ def extract_body(url):
 url = "https://stackoverflow.com/questions/35956045/extract-title-with-beautifulsoup"
 body = extract_body(url)
 #print(body)
-headline = extract_headline(url2)
+headline = extract_headline(url)
 #print(headline)
