@@ -1,7 +1,8 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-#import json
+import json
 
+from extract import *
 from snet import sdk
 import uclnlp_service_pb2 as pb2
 import uclnlp_service_pb2_grpc as pb2_grpc
@@ -24,10 +25,8 @@ CORS(app) # to enable CORS for the routes, unless from the front end response be
 @app.route('/get_score', methods=['GET'])
 def get_score():
    url = request.args.get('url')
-   headline = 'Melania Trump cancels plans to attend Tuesday rally citing Covid recovery'
-   body = '''Melania Trump is canceling her first campaign appearance in
-   months because she is not feeling well as she continues to recover from
-   Covid-19.'''
+   headline = extract_headline(url)
+   body = extract_body(url)
    req = pb2.InputData(headline=headline, body=body)
    result = service_client.service.stance_classify(req)
    return str(result)
