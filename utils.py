@@ -12,49 +12,44 @@ from config import config, rpc_endpoints
 
 
 class utils():
-    def __init__(self, org_id, service_id, group_name, rpc_endpoints, proxy_port):
-        self.org_id = org_id
-        self.service_id = service_id
-        self.group_name = group_name
+    def __init__(self):
+        self.org_id = 'odyssey-org'
+        self.service_id = 'uclnlp-service'
+        self.group_name = 'default_group'
         self.count = 0
         self.call_count = 0
         self.rpc_endpoints = rpc_endpoints
         self.snet_sdk = sdk.SnetSDK(config)
         self.start_time=time.time()
-        self.proxy_port=proxy_port
+        self.proxy_port=7005
     
+    def get_stance_classif(self, url):
+        headline = exctract_headline(url)
+        body = exctract_body(url)
 
-
-    def call_sdk(self, request, proc):
-        self.call_count += 1
-        service_client = self.snet_sdk.create_service_client(
-                                    self.org_id,
-                                    self.service_id,
-                                    pb2_grpc.UCLNLPStanceClassificationStub,
-                                    group_name=self.group_name,
-                                    concurrent_calls=1
-                        )
+        service_client = snet_sdk.create_service_client(
+                self.org_id,
+                self.service_id,
+                pb2_grpc.UCLNLPStanceClassificationStub,
+                group_name=self.group_name,
+                concurrent_calls=1)
         
-        try:
-            response=getattr(service_client.service, proc)(request)
-        except TypeError:
-            if self.count == 0:
-                self.account_deposit()
-                response=getattr(service_client.service, proc)(request)
-            else:
-                time.sleep(300)
-        except:
-            response=getattr(service_client.service, proc)(request)
+        req = pb2.InputData(headline=headline, body=body)
+        result = service_client.service.stance_classify(req)
 
-        return response
+        return result
+
+
+
     
-    def account_deposit(self):
-        self.count = 1
-        try:
-            value=subprocess.check_output(["bash", "script.sh", "deposit"])
-        except Exception as e:
-            logging.exception("message", e)
-        finally:
-            self.count=0
 
+def exctract_headline(url):
+    headline = 'Melania Trump cancels plans to attend Tuesday rally citing Covid recovery'
+    return headline
+
+def exctract_body(url):
+    body = '''Melania Trump is canceling her first campaign appearance in
+    months because she is not feeling well as she continues to recover from
+    Covid-19.'''
+    return body
 
