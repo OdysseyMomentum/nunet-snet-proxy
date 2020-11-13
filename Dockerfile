@@ -47,6 +47,7 @@ WORKDIR /SNET-PROXY
 RUN snet identity create snet key --private-key 0x347e5d047b26371486f619c85378cec98027ece00fa01a0e63af71069eb50729
 RUN snet network ropsten
 RUN snet identity snet
+RUN snet account deposit 0.10 -y
 RUN snet sdk generate-client-library python odyssey-org uclnlp-service
 RUN snet sdk generate-client-library python odyssey-org athene-service
 RUN snet sdk generate-client-library python odyssey-org fakenews-service
@@ -60,6 +61,6 @@ RUN pip3 install -r requirements.txt
 
 EXPOSE 7005
 
-CMD ["gunicorn", "test_sdk_uclnlp:app", "--config", "./gunicorn.conf.py"]
-#CMD ["gunicorn", "grpc_uclnlp:app", "--config", "./gunicorn.conf.py"]
+#CMD ["gunicorn", "sdk_app:app", "--config", "./gunicorn.conf.py"]
+CMD ["gunicorn", "grpc_app:app", "--config", "./gunicorn.conf.py"]
 #CMD ["gunicorn", "app:app", "--config", "./gunicorn.conf.py"]
