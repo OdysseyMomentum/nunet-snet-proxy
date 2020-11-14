@@ -1,5 +1,5 @@
 import os
-proxy_port=7005
+proxy_port=os.getenv("API_PORT")
 
 bind = "0.0.0.0:"+str(proxy_port)
 workers = 3

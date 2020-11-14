@@ -44,10 +44,18 @@ network = ropsten" > /root/.snet/config
 COPY . /SNET-PROXY 
 WORKDIR /SNET-PROXY
 
-RUN snet identity create snet key --private-key 0x347e5d047b26371486f619c85378cec98027ece00fa01a0e63af71069eb50729
+ENV PRIVATE_KEY="0x347e5d047b26371486f619c85378cec98027ece00fa01a0e63af71069eb50729"
+ENV API_PORT=7005
+ENV SERVICE="uclnlp"
+#ENV SERVICE="fakenews"
+ENV UCLNLP_GRPC="demo.nunet.io:7007"
+ENV ATHENE_GRPC="demo.nunet.io:7008"
+ENV FAKENEWS_GRPC="demo.nunet.io:7009"
+
+RUN snet identity create snet key --private-key $PRIVATE_KEY
 RUN snet network ropsten
+RUN snet account balance
 RUN snet identity snet
-RUN snet account deposit 0.10 -y
 RUN snet sdk generate-client-library python odyssey-org uclnlp-service
 RUN snet sdk generate-client-library python odyssey-org athene-service
 RUN snet sdk generate-client-library python odyssey-org fakenews-service
@@ -59,8 +67,7 @@ RUN mv ./client_libraries/odyssey-org/fakenews-service/python/* /SNET-PROXY
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y locales
 RUN pip3 install -r requirements.txt
 
-EXPOSE 7005
+EXPOSE $API_PORT
 
-#CMD ["gunicorn", "sdk_app:app", "--config", "./gunicorn.conf.py"]
-CMD ["gunicorn", "grpc_app:app", "--config", "./gunicorn.conf.py"]
-#CMD ["gunicorn", "app:app", "--config", "./gunicorn.conf.py"]
+CMD ["gunicorn", "sdk_app:app", "--config", "./gunicorn.conf.py"]
+#CMD ["gunicorn", "grpc_app:app", "--config", "./gunicorn.conf.py"]
