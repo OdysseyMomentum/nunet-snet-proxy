@@ -46,11 +46,14 @@ WORKDIR /SNET-PROXY
 
 ENV PRIVATE_KEY="0x347e5d047b26371486f619c85378cec98027ece00fa01a0e63af71069eb50729"
 ENV API_PORT=7005
-ENV SERVICE="uclnlp"
-#ENV SERVICE="fakenews"
+#ENV SERVICE="uclnlp"
+#ENV SERVICE="fakenews_nomad"
+ENV SERVICE="fakenews"
 ENV UCLNLP_GRPC="demo.nunet.io:7007"
 ENV ATHENE_GRPC="demo.nunet.io:7008"
 ENV FAKENEWS_GRPC="demo.nunet.io:7009"
+ENV FAKENEWS_NOMAD_GRPC=""
+ENV UCLNLP_NOMAD_GRPC=""
 
 RUN snet identity create snet key --private-key $PRIVATE_KEY
 RUN snet network ropsten

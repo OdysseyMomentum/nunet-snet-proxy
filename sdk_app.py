@@ -45,6 +45,15 @@ elif service == "fakenews":
             group_name='default_group',
             concurrent_calls=10)
 
+elif service == "fakenews_nomad":
+    service_id='fakenews-service'
+    service_client = snet_sdk.create_service_client(
+            org_id,
+            service_id,
+            fake_news_score_pb2_grpc.FakeNewsScoreStub,
+            group_name='default_group',
+            concurrent_calls=10)
+
 
 app = Flask(__name__)
 CORS(app) # to enable CORS for the routes, unless from the front end response becomes Network Error
@@ -69,6 +78,14 @@ def get_score():
        res = str(result).split('\n')
        res.pop(0)
        result = '\n'.join(map(str, res))
+   
+   elif service == "fakenews_nomad":
+       req = fake_news_score_pb2.InputFNS(headline=headline, body=body)
+       result = service_client.service.fn_score_calc(req)
+       res = str(result).split('\n')
+       res.pop(0)
+       result = '\n'.join(map(str, res))
+    
    print(result, flush=True)
    return str(result)
 

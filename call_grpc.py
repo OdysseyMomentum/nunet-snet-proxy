@@ -16,6 +16,8 @@ import fake_news_score_pb2_grpc
 uclnlp_grpc = os.getenv("UCLNLP_GRPC")
 athene_grpc = os.getenv("ATHENE_GRPC")
 fakenews_grpc = os.getenv("FAKENEWS_GRPC")
+fakenews_nomad_grpc = os.getenv("FAKENEWS_NOMAD_GRPC")
+uclnlp_nomad_grpc = os.getenv("UCLNLP_NOMAD_GRPC")
 service=os.getenv("SERVICE")
 print(service, flush=True)
 
@@ -50,8 +52,16 @@ def call_grpc(url):
             res = str(response).split('\n')
             res.pop(0)
             response = '\n'.join(map(str, res))
-
-
+                    
+        elif service == "fakenews_nomad":
+            channel = grpc.insecure_channel("{}".format(fakenews_nomad_grpc))
+            stub = fake_news_score_pb2_grpc.FakeNewsScoreStub(channel)
+            inp = fake_news_score_pb2.InputFNS(headline=headline, body=body)
+            response = stub.fn_score_calc(inp)
+            res = str(response).split('\n')
+            res.pop(0)
+            response = '\n'.join(map(str, res))
+            
     except Exception as e:
         print(e)
         exit(1)
